@@ -85,5 +85,7 @@ status-timedout:
 # arithmetic_base.go が含まれず、その変異は差分外 = SKIPPED となる。
 # 注意: 空 diff（クリーンな作業ツリー vs HEAD）では gremlins は diff フィルタを無効化し
 # 全て実行してしまう（SKIPPED にならない）。SKIPPED には「非空の差分」が必要。
+# 将来 arithmetic_base.go を変更するコミットを tip に積むと、その変異が差分内に入り
+# SKIPPED にならなくなる。その場合は -D を arithmetic_base.go 変更より前の ref に向けること。
 status-skipped:
 	$(GREMLINS) unleash $(TC) -D HEAD~1 -S s $(call only,arithmetic-base) ./mutators/arithmetic_base
