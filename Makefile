@@ -80,6 +80,10 @@ status-notviable:
 # TIMED OUT: 変異が無限ループを生む
 status-timedout:
 	$(GREMLINS) unleash $(TC) -S t $(call only,increment-decrement) ./statuses/timedout
-# SKIPPED: --diff で差分外（作業ツリーがクリーンなら全て差分外）
+# SKIPPED: --diff モードで「変更された差分の外」にある変異は SKIPPED になる。
+# 直近コミット(HEAD)は arithmetic_base.go を変更していないため、HEAD~1 との差分には
+# arithmetic_base.go が含まれず、その変異は差分外 = SKIPPED となる。
+# 注意: 空 diff（クリーンな作業ツリー vs HEAD）では gremlins は diff フィルタを無効化し
+# 全て実行してしまう（SKIPPED にならない）。SKIPPED には「非空の差分」が必要。
 status-skipped:
-	$(GREMLINS) unleash $(TC) -D HEAD -S s $(call only,arithmetic-base) ./mutators/arithmetic_base
+	$(GREMLINS) unleash $(TC) -D HEAD~1 -S s $(call only,arithmetic-base) ./mutators/arithmetic_base
