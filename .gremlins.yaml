@@ -1,0 +1,26 @@
+# Enable all 11 mutators.
+# The per-mutator targets (e.g. `make arithmetic-base`) do not depend on this
+# config because the Makefile's `only` function overrides it with flags.
+mutants:
+  arithmetic-base:
+    enabled: true
+  conditionals-boundary:
+    enabled: true
+  conditionals-negation:
+    enabled: true
+  increment-decrement:
+    enabled: true
+  invert-negatives:
+    enabled: true
+  invert-assignments:
+    enabled: true
+  invert-bitwise:
+    enabled: true
+  invert-bwassign:
+    enabled: true
+  invert-logical:
+    enabled: true
+  invert-loopctrl:
+    enabled: true
+  remove-self-assignments:
+    enabled: true
