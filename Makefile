@@ -35,8 +35,11 @@ test:
 	go test ./...
 
 # Apply all mutators to the whole repository (uses .gremlins.yaml).
+# Note: gremlins' unleash path is a filesystem directory, not a Go package
+# pattern. Passing `./...` makes the source-analysis walk find nothing
+# ("No results to report."), so use the module root `.` instead.
 all:
-	$(GREMLINS) unleash $(TC) ./...
+	$(GREMLINS) unleash $(TC) .
 
 # ---- per-mutator targets (enable only the target mutator to isolate a single mutation) ----
 arithmetic-base:
