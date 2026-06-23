@@ -1,7 +1,7 @@
-// Package invert_assignments は INVERT_ASSIGNMENTS mutator（+= → -= など、既定無効）のデモ。
+// Package invert_assignments demonstrates the INVERT_ASSIGNMENTS mutator (e.g. += -> -=, disabled by default).
 package invert_assignments
 
-// AddAssign は a += b の結果を返す。gremlins は `+=` を `-=` に変異させる。
+// AddAssign returns the result of a += b. gremlins mutates `+=` into `-=`.
 func AddAssign(a, b int) int {
 	a += b
 	return a

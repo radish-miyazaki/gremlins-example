@@ -1,8 +1,8 @@
-// Package lived は LIVED ステータスのデモ（弱いテストが変異を見逃すケース）。
+// Package lived demonstrates the LIVED status (a weak test that misses the mutation).
 package lived
 
-// Double は n + n を返す。gremlins は `+` を `-` に変異させるが、
-// テストが Double(0) しか検証しないため 0-0==0 で生き残る（LIVED）。
+// Double returns n + n. gremlins mutates `+` into `-`, but because the test only
+// checks Double(0), the mutation survives since 0-0==0 (LIVED).
 func Double(n int) int {
 	return n + n
 }

@@ -1,8 +1,8 @@
-// Package invert_loopctrl は INVERT_LOOPCTRL mutator（break → continue、既定無効）のデモ。
+// Package invert_loopctrl demonstrates the INVERT_LOOPCTRL mutator (break -> continue, disabled by default).
 package invert_loopctrl
 
-// FirstHit は flags の中で最初に true になる添字を返す（無ければ -1）。
-// gremlins は `break` を `continue` に変異させる。
+// FirstHit returns the index of the first true value in flags (-1 if there is none).
+// gremlins mutates `break` into `continue`.
 func FirstHit(flags []bool) int {
 	idx := -1
 	for i, f := range flags {

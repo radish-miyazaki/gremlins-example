@@ -6,7 +6,7 @@ func TestBelowLimit(t *testing.T) {
 	if !BelowLimit(9) {
 		t.Fatalf("BelowLimit(9) = false, want true")
 	}
-	// 境界値: 10 は限界未満ではない。`<`→`<=` の変異はこのケースで露見する。
+	// Boundary value: 10 is not below the limit. The `<`->`<=` mutation is exposed by this case.
 	if BelowLimit(10) {
 		t.Fatalf("BelowLimit(10) = true, want false")
 	}

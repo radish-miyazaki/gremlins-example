@@ -1,7 +1,7 @@
-// Package invert_bwassign は INVERT_BWASSIGN mutator（&= → |= など、既定無効）のデモ。
+// Package invert_bwassign demonstrates the INVERT_BWASSIGN mutator (e.g. &= -> |=, disabled by default).
 package invert_bwassign
 
-// AndAssign は a &= b の結果を返す。gremlins は `&=` を `|=` に変異させる。
+// AndAssign returns the result of a &= b. gremlins mutates `&=` into `|=`.
 func AndAssign(a, b int) int {
 	a &= b
 	return a

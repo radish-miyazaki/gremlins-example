@@ -1,6 +1,6 @@
-# 全11種類の mutator を有効化する。
-# 個別ターゲット（make arithmetic-base 等）は Makefile の only 関数が
-# フラグで上書きするため、この設定には依存しない。
+# Enable all 11 mutators.
+# The per-mutator targets (e.g. `make arithmetic-base`) do not depend on this
+# config because the Makefile's `only` function overrides it with flags.
 mutants:
   arithmetic-base:
     enabled: true

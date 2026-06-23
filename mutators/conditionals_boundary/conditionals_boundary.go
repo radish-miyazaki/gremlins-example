@@ -1,7 +1,7 @@
-// Package conditionals_boundary は CONDITIONALS_BOUNDARY mutator（< → <= など）のデモ。
+// Package conditionals_boundary demonstrates the CONDITIONALS_BOUNDARY mutator (e.g. < -> <=).
 package conditionals_boundary
 
-// BelowLimit は n が 10 未満かを返す。gremlins は `<` を `<=` に変異させる。
+// BelowLimit reports whether n is below 10. gremlins mutates `<` into `<=`.
 func BelowLimit(n int) bool {
 	return n < 10
 }

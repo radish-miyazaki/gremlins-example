@@ -1,7 +1,7 @@
-// Package invert_negatives は INVERT_NEGATIVES mutator（単項 -x → +x）のデモ。
+// Package invert_negatives demonstrates the INVERT_NEGATIVES mutator (unary -x -> +x).
 package invert_negatives
 
-// Negate は -n を返す。gremlins は単項 `-` を反転（実質除去）する。
+// Negate returns -n. gremlins inverts the unary `-` (effectively removing it).
 func Negate(n int) int {
 	return -n
 }

@@ -1,7 +1,7 @@
-// Package arithmetic_base は ARITHMETIC_BASE mutator（+ → - など）のデモ。
+// Package arithmetic_base demonstrates the ARITHMETIC_BASE mutator (e.g. + -> -).
 package arithmetic_base
 
-// Add は a + b を返す。gremlins は `+` を `-` に変異させる。
+// Add returns a + b. gremlins mutates `+` into `-`.
 func Add(a, b int) int {
 	return a + b
 }

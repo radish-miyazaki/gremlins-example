@@ -1,5 +1,5 @@
-// Package main はこの gremlins サンプルモジュールのプレースホルダエントリポイント。
-// 実際のデモは mutators/ と statuses/ 配下の各パッケージにある。
+// Package main is the placeholder entry point for this gremlins example module.
+// The actual demos live in the packages under mutators/ and statuses/.
 package main
 
 func main() {}

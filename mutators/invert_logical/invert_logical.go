@@ -1,7 +1,7 @@
-// Package invert_logical は INVERT_LOGICAL mutator（&& → ||、既定無効）のデモ。
+// Package invert_logical demonstrates the INVERT_LOGICAL mutator (&& -> ||, disabled by default).
 package invert_logical
 
-// Both は a && b を返す。gremlins は `&&` を `||` に変異させる。
+// Both returns a && b. gremlins mutates `&&` into `||`.
 func Both(a, b bool) bool {
 	return a && b
 }

@@ -1,24 +1,25 @@
 GREMLINS ?= go tool gremlins
 
-# go のビルドキャッシュをモジュール外の書き込み可能な場所に置く。
-# 既定の GOCACHE が書き込み不可な環境（サンドボックス等）でも go test / gremlins が
-# 動くようにするため。モジュール内に置くと gremlins の作業ディレクトリ複製に含まれて
-# しまうため、必ずモジュール外（$TMPDIR 配下）に置く。
+# Put the Go build cache in a writable location outside the module so that
+# `go test` / gremlins keep working even where the default GOCACHE is read-only
+# (sandboxes etc.). Keeping it inside the module would pull it into the working
+# directory copy that gremlins makes, so it must live outside (under $TMPDIR).
 GOCACHE ?= $(or $(TMPDIR),/tmp)/gremlins-showcase-gocache
 export GOCACHE
 
-# gremlins のタイムアウト = カバレッジ計測時間 × 係数（既定3）。
-# キャッシュが温まっているとカバレッジ計測が一瞬で終わり、係数3では変異後の
-# 再コンパイルが間に合わず誤って TIMED OUT になる。係数を上げて安定させる。
+# The gremlins timeout = coverage measurement time x coefficient (default 3).
+# With a warm cache, coverage measurement finishes almost instantly and a
+# coefficient of 3 leaves no time to recompile the mutated code, causing a
+# spurious TIMED OUT. Raise the coefficient to keep things stable.
 TC := --timeout-coefficient 30
 
-# gremlins の全 mutator フラグ名（mappings.go / unleash の --help と一致）
+# All mutator flag names of gremlins (matching mappings.go / `unleash --help`).
 MUTATORS := arithmetic-base conditionals-boundary conditionals-negation \
             increment-decrement invert-negatives invert-assignments \
             invert-bitwise invert-bwassign invert-logical invert-loopctrl \
             remove-self-assignments
 
-# $(call only,<flag>) -> 指定した mutator だけを true、残りを false にするフラグ列
+# $(call only,<flag>) -> a flag sequence that sets only the given mutator to true and the rest to false.
 only = $(foreach m,$(MUTATORS),--$(m)=$(if $(filter $(m),$(1)),true,false))
 
 .PHONY: test all \
@@ -29,15 +30,15 @@ only = $(foreach m,$(MUTATORS),--$(m)=$(if $(filter $(m),$(1)),true,false))
         status-runnable status-notcovered status-killed status-lived \
         status-notviable status-timedout status-skipped
 
-# 元コードのテストが全てパスすることを確認（gremlins 実行の前提）
+# Verify that all tests on the original code pass (a prerequisite for running gremlins).
 test:
 	go test ./...
 
-# リポジトリ全体に全 mutator を適用（.gremlins.yaml を使用）
+# Apply all mutators to the whole repository (uses .gremlins.yaml).
 all:
 	$(GREMLINS) unleash $(TC) ./...
 
-# ---- mutator 別ターゲット（対象 mutator だけ有効化して単一変異に絞る） ----
+# ---- per-mutator targets (enable only the target mutator to isolate a single mutation) ----
 arithmetic-base:
 	$(GREMLINS) unleash $(TC) $(call only,arithmetic-base) ./mutators/arithmetic_base
 conditionals-boundary:
@@ -61,31 +62,32 @@ invert-loopctrl:
 remove-self-assignments:
 	$(GREMLINS) unleash $(TC) $(call only,remove-self-assignments) ./mutators/remove_self_assignments
 
-# ---- status 別ターゲット（-S で該当ステータスだけ表示） ----
-# RUNNABLE: --dry-run でカバー済み変異を実行せず RUNNABLE のまま表示
+# ---- per-status targets (use -S to show only the relevant status) ----
+# RUNNABLE: --dry-run shows covered mutations as RUNNABLE without executing them.
 status-runnable:
 	$(GREMLINS) unleash $(TC) -d -S r $(call only,arithmetic-base) ./mutators/arithmetic_base
-# NOT COVERED: テスト未到達の行
+# NOT COVERED: a line not reached by any test.
 status-notcovered:
 	$(GREMLINS) unleash $(TC) -S c $(call only,arithmetic-base) ./statuses/notcovered
-# KILLED: テストが変異を検出
+# KILLED: a test detects the mutation.
 status-killed:
 	$(GREMLINS) unleash $(TC) -S k $(call only,arithmetic-base) ./mutators/arithmetic_base
-# LIVED: 弱いテストが変異を見逃す
+# LIVED: a weak test misses the mutation.
 status-lived:
 	$(GREMLINS) unleash $(TC) -S l $(call only,arithmetic-base) ./statuses/lived
-# NOT VIABLE: 変異後コードがコンパイル不能
+# NOT VIABLE: the mutated code fails to compile.
 status-notviable:
 	$(GREMLINS) unleash $(TC) -S v $(call only,arithmetic-base) ./statuses/notviable
-# TIMED OUT: 変異が無限ループを生む
+# TIMED OUT: the mutation produces an infinite loop.
 status-timedout:
 	$(GREMLINS) unleash $(TC) -S t $(call only,increment-decrement) ./statuses/timedout
-# SKIPPED: --diff モードで「変更された差分の外」にある変異は SKIPPED になる。
-# 直近コミット(HEAD)は arithmetic_base.go を変更していないため、HEAD~1 との差分には
-# arithmetic_base.go が含まれず、その変異は差分外 = SKIPPED となる。
-# 注意: 空 diff（クリーンな作業ツリー vs HEAD）では gremlins は diff フィルタを無効化し
-# 全て実行してしまう（SKIPPED にならない）。SKIPPED には「非空の差分」が必要。
-# 将来 arithmetic_base.go を変更するコミットを tip に積むと、その変異が差分内に入り
-# SKIPPED にならなくなる。その場合は -D を arithmetic_base.go 変更より前の ref に向けること。
+# SKIPPED: in --diff mode, a mutation that falls "outside the changed diff" is reported as SKIPPED.
+# The most recent commit (HEAD) does not modify arithmetic_base.go, so the diff against HEAD~1
+# does not include arithmetic_base.go and its mutation is outside the diff = SKIPPED.
+# Note: with an empty diff (clean working tree vs HEAD) gremlins disables the diff filter and
+# runs everything (no SKIPPED). SKIPPED requires a non-empty diff.
+# If a future commit that modifies arithmetic_base.go is stacked on the tip, its mutation falls
+# inside the diff and is no longer SKIPPED. In that case, point -D at a ref before the
+# arithmetic_base.go change.
 status-skipped:
 	$(GREMLINS) unleash $(TC) -D HEAD~1 -S s $(call only,arithmetic-base) ./mutators/arithmetic_base

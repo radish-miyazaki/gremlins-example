@@ -1,7 +1,7 @@
-// Package invert_bitwise は INVERT_BITWISE mutator（& → | など、既定無効）のデモ。
+// Package invert_bitwise demonstrates the INVERT_BITWISE mutator (e.g. & -> |, disabled by default).
 package invert_bitwise
 
-// And は a & b を返す。gremlins は `&` を `|` に変異させる。
+// And returns a & b. gremlins mutates `&` into `|`.
 func And(a, b int) int {
 	return a & b
 }

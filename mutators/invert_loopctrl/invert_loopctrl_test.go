@@ -3,7 +3,7 @@ package invert_loopctrl
 import "testing"
 
 func TestFirstHit(t *testing.T) {
-	// 最初に true になる添字を返す。`break`→`continue` だと最後の true (=2) を返し露見する。
+	// Returns the index of the first true. With `break`->`continue` it returns the last true (=2), exposing the mutation.
 	if got := FirstHit([]bool{false, true, true}); got != 1 {
 		t.Fatalf("FirstHit({false,true,true}) = %d, want 1", got)
 	}

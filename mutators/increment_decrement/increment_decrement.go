@@ -1,7 +1,7 @@
-// Package increment_decrement は INCREMENT_DECREMENT mutator（++ → --）のデモ。
+// Package increment_decrement demonstrates the INCREMENT_DECREMENT mutator (++ -> --).
 package increment_decrement
 
-// Next は n をインクリメントして返す。gremlins は `++` を `--` に変異させる。
+// Next increments n and returns it. gremlins mutates `++` into `--`.
 func Next(n int) int {
 	n++
 	return n

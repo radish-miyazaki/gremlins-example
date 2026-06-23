@@ -1,13 +1,13 @@
-// Package notcovered は NOT COVERED ステータスのデモ。
-// Covered はテストされ（RUNNABLE/KILLED）、Uncovered はテストされない（NOT COVERED）。
+// Package notcovered demonstrates the NOT COVERED status.
+// Covered is exercised by a test (RUNNABLE/KILLED); Uncovered is not (NOT COVERED).
 package notcovered
 
-// Covered はテストでカバーされる。
+// Covered is exercised by a test.
 func Covered(a, b int) int {
 	return a + b
 }
 
-// Uncovered はテストから呼ばれないため、その `+` の変異は NOT COVERED になる。
+// Uncovered is never called from a test, so the mutation of its `+` is NOT COVERED.
 func Uncovered(a, b int) int {
 	return a + b
 }

@@ -1,9 +1,9 @@
-// Package notviable は NOT VIABLE ステータスのデモ。
-// 文字列連結の `+` を `-` に変異させると型エラーでコンパイル不能になる。
+// Package notviable demonstrates the NOT VIABLE status.
+// Mutating the `+` of a string concatenation into `-` produces a type error and fails to compile.
 package notviable
 
-// Concat は a + b（文字列連結）を返す。`+`→`-` の変異は string では
-// コンパイルできず、gremlins は NOT VIABLE と判定する。
+// Concat returns a + b (string concatenation). The `+`->`-` mutation cannot
+// compile for strings, so gremlins classifies it as NOT VIABLE.
 func Concat(a, b string) string {
 	return a + b
 }
